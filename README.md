@@ -2,8 +2,8 @@
 
 Análise das vendas da AdventureWorks convertidas para reais pela cotação do dia de cada pedido, do SQL Server ao Power BI, com todos os números validados contra o banco.
 
-<!-- Adicione o print do dashboard em docs/dashboard.png -->
 ![Dashboard Vendas em R$](docs/dashboard.png)
+*Página "Vendas em R$" filtrada em 2013.*
 
 ## Problema
 

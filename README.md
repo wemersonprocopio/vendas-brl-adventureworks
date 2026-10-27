@@ -81,7 +81,7 @@ gerar_pagina_vendas_brl.py      script que gera a página "Vendas em R$" (visuai
 1. Restaure o banco **AdventureWorksDW2014** num SQL Server.
 2. Rode `vw_CotacaoBRL_VendasBRL.sql` para criar as views `dbo.vw_CotacaoBRL` e `dbo.vw_VendasBRL`.
 3. Abra `vw_VendasBRL.pbip` no Power BI Desktop.
-4. As consultas apontam para o servidor `wpdso`. Troque pelo nome do seu servidor em **Transformar dados → Configurações da fonte de dados** e atualize.
+4. As consultas apontam para o SQL Server local do autor. Troque pelo nome do seu servidor em **Transformar dados → Configurações da fonte de dados** e atualize.
 
 ## Ferramentas
 

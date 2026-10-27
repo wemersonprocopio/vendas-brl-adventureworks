@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["DimCustomer","DimDate","DimProduct","DimReseller","DimSalesTerritory","vw_VendasBRL"]
+annotation PBI_QueryOrder = ["DimCustomer","DimDate","DimProduct","DimReseller","DimSalesTerritory","vw_VendasBRL","AnosAnalise"]
 
 annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
 

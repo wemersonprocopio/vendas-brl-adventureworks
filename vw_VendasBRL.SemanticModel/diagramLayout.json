@@ -1,0 +1,100 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 300
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 219.98016942014937,
+            "y": 668.82175708006594
+          },
+          "nodeIndex": "DimCustomer",
+          "nodeLineageTag": "66e28747-b916-4d99-989e-fa674b93b320",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 642.21881750582907,
+            "y": 576.410878540033
+          },
+          "nodeIndex": "DimDate",
+          "nodeLineageTag": "c7dc561b-e7e3-4263-9276-edf7ef69ffd9",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 475.02272970236709,
+            "y": -50
+          },
+          "nodeIndex": "DimProduct",
+          "nodeLineageTag": "bc3095d4-5540-4014-a3af-276124563021",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 311.50308296118396
+          },
+          "nodeIndex": "DimReseller",
+          "nodeLineageTag": "ebe3b611-4749-426e-bba0-76dd7ad7d78d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 653.21881750582918,
+            "y": 302.9569246343433
+          },
+          "nodeIndex": "DimSalesTerritory",
+          "nodeLineageTag": "e4662f98-5d87-42c3-ac55-d9e0ed968c3c",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 363.88956316489055,
+            "y": 311.56986163897585
+          },
+          "nodeIndex": "vw_VendasBRL",
+          "nodeLineageTag": "4f411c3c-0651-4301-891e-621457db9167",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}

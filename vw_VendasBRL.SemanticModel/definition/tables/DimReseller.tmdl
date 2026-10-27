@@ -1,0 +1,191 @@
+table DimReseller
+	lineageTag: ebe3b611-4749-426e-bba0-76dd7ad7d78d
+
+	column ResellerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 1370a4d8-068e-4a43-a661-083bb50ba122
+		summarizeBy: none
+		sourceColumn: ResellerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column GeographyKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 3edcfb13-fa08-439a-b17b-109979253cf6
+		summarizeBy: none
+		sourceColumn: GeographyKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResellerAlternateKey
+		dataType: string
+		lineageTag: 19270bf1-e508-4ead-b2e4-912034bb95eb
+		summarizeBy: none
+		sourceColumn: ResellerAlternateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Phone
+		dataType: string
+		lineageTag: a5c6650b-4779-4547-b85d-69ee839f86cb
+		summarizeBy: none
+		sourceColumn: Phone
+
+		annotation SummarizationSetBy = Automatic
+
+	column BusinessType
+		dataType: string
+		lineageTag: a4f41d0d-5cce-4e7a-a2e2-38cadaa56c6e
+		summarizeBy: none
+		sourceColumn: BusinessType
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResellerName
+		dataType: string
+		lineageTag: b3abe191-ba75-45f3-ac80-0b22992dc2d5
+		summarizeBy: none
+		sourceColumn: ResellerName
+
+		annotation SummarizationSetBy = Automatic
+
+	column NumberEmployees
+		dataType: int64
+		formatString: 0
+		lineageTag: f7fc87e1-472b-4c40-ade3-2674caad05f3
+		summarizeBy: none
+		sourceColumn: NumberEmployees
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderFrequency
+		dataType: string
+		lineageTag: 9d7e7e23-7a30-402a-905c-6f38f139873a
+		summarizeBy: none
+		sourceColumn: OrderFrequency
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: 3b12bc29-a23b-464f-83bc-0cc2928d2b87
+		summarizeBy: none
+		sourceColumn: OrderMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column FirstOrderYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 4b2292d0-6232-4273-9ecc-0d748b8356c0
+		summarizeBy: none
+		sourceColumn: FirstOrderYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastOrderYear
+		dataType: int64
+		formatString: 0
+		lineageTag: f19959f1-eb30-4469-abc2-f0864d9380b7
+		summarizeBy: none
+		sourceColumn: LastOrderYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductLine
+		dataType: string
+		lineageTag: 0ec3007d-e232-44fa-8e45-97c3ddefddc3
+		summarizeBy: none
+		sourceColumn: ProductLine
+
+		annotation SummarizationSetBy = Automatic
+
+	column AddressLine1
+		dataType: string
+		lineageTag: da3e3770-5172-4853-af98-7eb6c0663959
+		summarizeBy: none
+		sourceColumn: AddressLine1
+
+		annotation SummarizationSetBy = Automatic
+
+	column AddressLine2
+		dataType: string
+		lineageTag: 00b3b9aa-7ceb-4e83-b963-d539b23b2e29
+		summarizeBy: none
+		sourceColumn: AddressLine2
+
+		annotation SummarizationSetBy = Automatic
+
+	column AnnualSales
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: c3204eb8-da01-4c9b-9b3b-c2a8590db9f2
+		summarizeBy: none
+		sourceColumn: AnnualSales
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column BankName
+		dataType: string
+		lineageTag: e292c4ba-5fc4-42e4-83b6-812d8aa59924
+		summarizeBy: none
+		sourceColumn: BankName
+
+		annotation SummarizationSetBy = Automatic
+
+	column MinPaymentType
+		dataType: int64
+		formatString: 0
+		lineageTag: 22e3a1ea-ace5-4dee-a22e-259c240fa706
+		summarizeBy: none
+		sourceColumn: MinPaymentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column MinPaymentAmount
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 7dbc6dd7-8d3c-4d5d-bac9-18c6bc5b725d
+		summarizeBy: none
+		sourceColumn: MinPaymentAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column AnnualRevenue
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: fad10ca1-7af7-4fdd-b2c0-3416c3db1ea4
+		summarizeBy: none
+		sourceColumn: AnnualRevenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column YearOpened
+		dataType: int64
+		formatString: 0
+		lineageTag: 170a43fa-1a72-445c-8917-e1a3a810ee19
+		summarizeBy: none
+		sourceColumn: YearOpened
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimReseller = m
+		mode: import
+		source =
+				let
+				  Origem = Sql.Database("wpdso", "AdventureWorksDW2014"),
+				  #"Navegação 1" = Origem{[Schema = "dbo", Item = "DimReseller"]}[Data]
+				in
+				  #"Navegação 1"
+
+	annotation PBI_ResultType = Table
+

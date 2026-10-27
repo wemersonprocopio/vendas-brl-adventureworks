@@ -1,0 +1,20 @@
+relationship AutoDetected_b0c489a6-94c0-4c4e-a4a6-026116d87732
+	fromColumn: vw_VendasBRL.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship AutoDetected_e7c6aaf5-d913-4c70-9c37-a06736c29a5e
+	fromColumn: vw_VendasBRL.ProductKey
+	toColumn: DimProduct.ProductKey
+
+relationship AutoDetected_3df781f9-ee15-45ab-ac44-7c21942490e1
+	fromColumn: vw_VendasBRL.ResellerKey
+	toColumn: DimReseller.ResellerKey
+
+relationship AutoDetected_f3c920a6-108a-445f-b441-9beeab9061a7
+	fromColumn: vw_VendasBRL.SalesTerritoryKey
+	toColumn: DimSalesTerritory.SalesTerritoryKey
+
+relationship 0f25bd7a-f5e4-7b36-fc6b-708cde0e5b70
+	fromColumn: vw_VendasBRL.OrderDateKey
+	toColumn: DimDate.DateKey
+

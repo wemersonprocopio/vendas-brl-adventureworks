@@ -1,0 +1,60 @@
+table DimSalesTerritory
+	lineageTag: e4662f98-5d87-42c3-ac55-d9e0ed968c3c
+
+	column SalesTerritoryKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 9653e150-335c-4dd8-a6e2-3e32e90476b9
+		summarizeBy: none
+		sourceColumn: SalesTerritoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesTerritoryAlternateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: b3dbcdd0-f378-4c21-a6a6-64689838aec0
+		summarizeBy: none
+		sourceColumn: SalesTerritoryAlternateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesTerritoryRegion
+		dataType: string
+		lineageTag: 948d2806-bc93-441b-96d2-5b50cc8df6bf
+		summarizeBy: none
+		sourceColumn: SalesTerritoryRegion
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesTerritoryCountry
+		dataType: string
+		lineageTag: f7e967d0-e947-4503-9793-3d46bdc0d25e
+		summarizeBy: none
+		sourceColumn: SalesTerritoryCountry
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesTerritoryGroup
+		dataType: string
+		lineageTag: 54393f55-7b1d-4ec3-8aa5-431290ec8b87
+		summarizeBy: none
+		sourceColumn: SalesTerritoryGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimSalesTerritory = m
+		mode: import
+		source =
+				let
+				  Origem = Sql.Database("wpdso", "AdventureWorksDW2014"),
+				  #"Navegação 1" = Origem{[Schema = "dbo", Item = "DimSalesTerritory"]}[Data],
+				  // So territorios com venda (tira a linha NA, chave 11, que nao tem venda)
+				  Vendas = Origem{[Schema = "dbo", Item = "vw_VendasBRL"]}[Data],
+				  ChavesComVenda = List.Distinct(Vendas[SalesTerritoryKey]),
+				  #"Territórios com venda" = Table.SelectRows(#"Navegação 1", each List.Contains(ChavesComVenda, [SalesTerritoryKey]))
+				in
+				  #"Territórios com venda"
+
+	annotation PBI_ResultType = Table
+

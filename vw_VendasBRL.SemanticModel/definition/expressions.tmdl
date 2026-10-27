@@ -1,0 +1,15 @@
+/// Anos da análise: só os que têm venda nos 12 meses (hoje 2011, 2012 e 2013)
+expression AnosAnalise =
+		let
+		  Origem = Sql.Database("wpdso", "AdventureWorksDW2014"),
+		  Vendas = Origem{[Schema = "dbo", Item = "vw_VendasBRL"]}[Data],
+		  ComAno = Table.AddColumn(Vendas, "Ano", each Date.Year([DataPedido]), Int64.Type),
+		  ComMes = Table.AddColumn(ComAno, "Mes", each Date.Month([DataPedido]), Int64.Type),
+		  AnoMes = Table.Distinct(Table.SelectColumns(ComMes, {"Ano", "Mes"})),
+		  MesesPorAno = Table.Group(AnoMes, {"Ano"}, {{"Meses", each Table.RowCount(_), Int64.Type}}),
+		  // Regra: ano entra na análise só se tiver venda nos 12 meses
+		  AnosCompletos = Table.SelectRows(MesesPorAno, each [Meses] = 12)[Ano]
+		in
+		  AnosCompletos
+	lineageTag: 2ce81f47-796b-42ba-8199-918973b706cc
+

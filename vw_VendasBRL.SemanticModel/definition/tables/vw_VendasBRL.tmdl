@@ -1,0 +1,249 @@
+table vw_VendasBRL
+	lineageTag: 4f411c3c-0651-4301-891e-621457db9167
+
+	/// Receita convertida pela cotação BRL do dia do pedido
+	measure 'Receita R$' = SUM ( vw_VendasBRL[Receita_BRL] )
+		formatString: "R$" #,0.00
+		displayFolder: 1 Base
+		lineageTag: 91219afd-723e-432b-9869-07d04aa06303
+
+	measure 'Custo R$' = SUM ( vw_VendasBRL[Custo_BRL] )
+		formatString: "R$" #,0.00
+		displayFolder: 1 Base
+		lineageTag: b31f8875-26b5-481b-9670-f9f1cdbae9eb
+
+	measure 'Margem R$' = [Receita R$] - [Custo R$]
+		formatString: "R$" #,0.00
+		displayFolder: 1 Base
+		lineageTag: 2cb44eef-0a36-4f8f-8f4b-042b89e9a6ae
+
+	measure 'Margem %' = DIVIDE ( [Margem R$], [Receita R$] )
+		formatString: 0.0%
+		displayFolder: 1 Base
+		lineageTag: 48d1fa23-d44a-4f4f-a489-79451c98e382
+
+	measure 'Qtd Vendida' = SUM ( vw_VendasBRL[Quantidade] )
+		formatString: #,0
+		displayFolder: 1 Base
+		lineageTag: 2c15cdf8-5132-486b-95fe-02e263e71bd3
+
+	measure Pedidos = DISTINCTCOUNT ( vw_VendasBRL[Pedido] )
+		formatString: #,0
+		displayFolder: 1 Base
+		lineageTag: a2942a75-d168-4bb4-bee1-73479574224d
+
+	measure 'Ticket Médio R$' = DIVIDE ( [Receita R$], [Pedidos] )
+		formatString: "R$" #,0.00
+		displayFolder: 1 Base
+		lineageTag: 090fbf61-7587-4044-8c08-96a82896e9f1
+
+	/// Cotação BRL/USD ponderada pela receita
+	measure 'Cotação Média' = DIVIDE ( [Receita R$], SUM ( vw_VendasBRL[Receita_USD] ) )
+		formatString: 0.00
+		displayFolder: 1 Base
+		lineageTag: cc82ba88-9f86-4561-98ab-9405c59624df
+
+	measure 'Receita R$ YTD' = TOTALYTD ( [Receita R$], DimDate[FullDateAlternateKey] )
+		formatString: "R$" #,0.00
+		displayFolder: 2 Tempo
+		lineageTag: da7caaa7-2715-4e83-aaba-f4869b3ce64e
+
+	measure 'Receita R$ Ano Anterior' = CALCULATE ( [Receita R$], SAMEPERIODLASTYEAR ( DimDate[FullDateAlternateKey] ) )
+		formatString: "R$" #,0.00
+		displayFolder: 2 Tempo
+		lineageTag: 24364b6b-0bba-4f1c-bc88-9981f37b2612
+
+	/// Crescimento sobre o mesmo período do ano anterior. Fica em branco quando o período atual ou o anterior não está inteiro na base (ex.: 2010 tem só 29-31/12 e 2014 só janeiro).
+	measure 'Crescimento % a.a.' =
+			-- Compara so quando o ano anterior existe inteiro na base
+			VAR _PrimeiraVenda = CALCULATE ( MIN ( vw_VendasBRL[DataPedido] ), REMOVEFILTERS () )
+			VAR _UltimaVenda = CALCULATE ( MAX ( vw_VendasBRL[DataPedido] ), REMOVEFILTERS () )
+			VAR _InicioAtual = MIN ( DimDate[FullDateAlternateKey] )
+			VAR _FimAtual = MAX ( DimDate[FullDateAlternateKey] )
+			VAR _InicioAnterior = CALCULATE ( MIN ( DimDate[FullDateAlternateKey] ), SAMEPERIODLASTYEAR ( DimDate[FullDateAlternateKey] ) )
+			VAR _PeriodoCompleto =
+			    _InicioAnterior = EDATE ( _InicioAtual, -12 )   -- anterior comeca 1 ano antes (nao foi cortado)
+			        && _InicioAnterior >= _PrimeiraVenda
+			        && _FimAtual <= _UltimaVenda
+			VAR _Atual = [Receita R$]
+			VAR _Anterior = [Receita R$ Ano Anterior]
+			RETURN
+			    IF ( _PeriodoCompleto && NOT ISBLANK ( _Atual ), DIVIDE ( _Atual - _Anterior, _Anterior ) )
+		formatString: 0.0%
+		displayFolder: 2 Tempo
+		lineageTag: 388fb4a9-e737-4b9c-9a03-7a2e1f434f47
+
+	/// Texto do cartão de crescimento; mostra 's/ comparação' quando o período está incompleto
+	measure 'Txt Crescimento' =
+			VAR _c = [Crescimento % a.a.]
+			RETURN
+			    IF ( ISBLANK ( _c ), "s/ comparação", FORMAT ( _c, "+0.0%;-0.0%" ) )
+		displayFolder: 3 Textos e Cores
+		lineageTag: 21393018-06f6-4e2c-90d1-f4367c473534
+
+	measure 'Cor Crescimento' =
+			VAR _c = [Crescimento % a.a.]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( _c ), "#8A969C", _c >= 0, "#1E9E6A", "#D64545" )
+		displayFolder: 3 Textos e Cores
+		lineageTag: 8393720c-57b8-40a0-9e97-ea16c650d2dc
+
+	measure 'Cor Margem' = IF ( [Margem %] < 0, "#D64545", "#1B2327" )
+		displayFolder: 3 Textos e Cores
+		lineageTag: 976f0247-4835-4a40-8513-53baa9320273
+
+	column Canal
+		dataType: string
+		lineageTag: db756745-3d8f-4f51-83fd-a10af07ef547
+		summarizeBy: none
+		sourceColumn: Canal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pedido
+		dataType: string
+		lineageTag: d0a90fd7-8799-4176-8ecd-c160ac2fe982
+		summarizeBy: none
+		sourceColumn: Pedido
+
+		annotation SummarizationSetBy = Automatic
+
+	column LinhaPedido
+		dataType: int64
+		formatString: 0
+		lineageTag: b5ccf80c-df1d-44f3-a1ad-4f0a1e02f24e
+		summarizeBy: sum
+		sourceColumn: LinhaPedido
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: d5f3c7b3-d344-4800-be97-3ac90f883d26
+		summarizeBy: none
+		sourceColumn: OrderDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataPedido
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: bd97ff5c-1a42-4515-bd71-177da02ab07d
+		summarizeBy: none
+		sourceColumn: DataPedido
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a4b626d-945c-4b70-8ffe-83e16ff04b04
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesTerritoryKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 511b339b-bb38-4f90-8196-540fd2e22df5
+		summarizeBy: none
+		sourceColumn: SalesTerritoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 7d51076d-1983-4905-89f4-68de846098da
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResellerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: c5bfbbcf-3c0a-4ad7-85b8-8953f07cd132
+		summarizeBy: none
+		sourceColumn: ResellerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantidade
+		dataType: int64
+		formatString: 0
+		lineageTag: e5536c3e-31c3-4bd2-b705-1823d411b6e0
+		summarizeBy: sum
+		sourceColumn: Quantidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Receita_USD
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: da15db86-cc60-45e7-8fea-a9e1642d7f0f
+		summarizeBy: sum
+		sourceColumn: Receita_USD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Custo_USD
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: e2b458ac-ea61-461c-b783-6ea108a3a319
+		summarizeBy: sum
+		sourceColumn: Custo_USD
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Receita_BRL
+		dataType: double
+		lineageTag: d63a1228-05b0-401c-b269-b2193f4524d6
+		summarizeBy: sum
+		sourceColumn: Receita_BRL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Custo_BRL
+		dataType: double
+		lineageTag: d2d1df9a-7f9f-40be-81fa-c79bf7b00895
+		summarizeBy: sum
+		sourceColumn: Custo_BRL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Cotacao
+		dataType: double
+		lineageTag: d3c7d5bd-a8fd-4952-a67f-cae9c769bbde
+		summarizeBy: sum
+		sourceColumn: Cotacao
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition vw_VendasBRL = m
+		mode: import
+		source =
+				let
+				  Origem = Sql.Database("wpdso", "AdventureWorksDW2014"),
+				  #"Navegação 1" = Origem{[Schema = "dbo", Item = "vw_VendasBRL"]}[Data],
+				  // Recorte da análise: só anos completos (consulta AnosAnalise)
+				  #"Anos da análise" = Table.SelectRows(#"Navegação 1", each List.Contains(AnosAnalise, Date.Year([DataPedido])))
+				in
+				  #"Anos da análise"
+
+	annotation PBI_ResultType = Table
+

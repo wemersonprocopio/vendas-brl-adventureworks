@@ -1,7 +1,7 @@
-"""Gera a página PBIR "Vendas em R$" no projeto vw_VendasBRL.pbip.
+"""Gera a página PBIR "Vendas em R$" no projeto vendas_brl_adventureworks_2011_2013.pbip.
 
 Uso (com o Power BI Desktop FECHADO):
-    python gerar_pagina_vendas_brl.py "<pasta>\\vw_VendasBRL.Report"
+    python gerar_pagina_vendas_brl.py "<pasta>\\vendas_brl_adventureworks_2011_2013.Report"
 
 Faz backup de pages.json antes de alterar. Rodar de novo recria a página.
 Estilo igual ao 2_analise_vendas: fundo #F3F5F6, título em faixa #1B2327, destaque #008080.
@@ -17,7 +17,7 @@ PAGE_ID = "b7e1c4a9d2f60358e1a7"
 PAGE_NAME = "Vendas em R$"
 
 ESCURO, TEAL, CLARO, BORDA = "#1B2327", "#008080", "#F3F5F6", "#D5DDE0"
-FATO = "vw_VendasBRL"
+FATO = "vendas"
 
 SCHEMA_VISUAL = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json"
 SCHEMA_PAGE = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json"
@@ -111,9 +111,9 @@ add("textbox", 16, 12, 1888, 64, {
 
 # Segmentações
 for x, (tab, col, titulo) in zip((16, 651, 1286), (
-        ("DimDate", "CalendarYear", "Ano"),
+        ("data", "CalendarYear", "Ano"),
         (FATO, "Canal", "Canal"),
-        ("DimSalesTerritory", "SalesTerritoryCountry", "País"))):
+        ("territorios", "SalesTerritoryCountry", "País"))):
     add("slicer", x, 88, 618, 84, {
         "query": {"queryState": {"Values": {"projections": [coluna(tab, col, active=True)]}}},
         "objects": {
@@ -150,7 +150,7 @@ for i, (m, titulo, cor_m) in enumerate(cards):
     })
 
 # Receita (colunas) x Margem % (linha) por mês
-mes = coluna("DimDate", "Mês Ano", active=True)
+mes = coluna("data", "Mês Ano", active=True)
 add("lineClusteredColumnComboChart", 16, 306, 1180, 372, {
     "query": {
         "queryState": {
@@ -179,7 +179,7 @@ rec = medida("Receita R$")
 add("barChart", 1212, 306, 692, 372, {
     "query": {
         "queryState": {
-            "Category": {"projections": [coluna("DimSalesTerritory", "SalesTerritoryCountry", active=True)]},
+            "Category": {"projections": [coluna("territorios", "SalesTerritoryCountry", active=True)]},
             "Y": {"projections": [rec]},
             "Tooltips": {"projections": [medida("Margem %"), medida("Pedidos")]},
         },
@@ -195,7 +195,7 @@ add("barChart", 1212, 306, 692, 372, {
 })
 
 # Tabela ano x canal
-ano = coluna("DimDate", "CalendarYear")
+ano = coluna("data", "CalendarYear")
 add("tableEx", 16, 694, 1180, 370, {
     "query": {
         "queryState": {"Values": {"projections": [
@@ -218,7 +218,7 @@ add("tableEx", 16, 694, 1180, 370, {
 })
 
 # Cotação média por mês
-mes2 = coluna("DimDate", "Mês Ano", active=True)
+mes2 = coluna("data", "Mês Ano", active=True)
 add("lineChart", 1212, 694, 692, 370, {
     "query": {
         "queryState": {

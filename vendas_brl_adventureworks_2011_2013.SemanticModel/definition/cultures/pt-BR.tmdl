@@ -1,0 +1,158 @@
+cultureInfo pt-BR
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "data.calendaryear": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "data",
+			          "ConceptualProperty": "CalendarYear"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Ano": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "vendas.canal": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "vendas",
+			          "ConceptualProperty": "Canal"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Canal": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "vendas.receita_r": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "vendas",
+			          "ConceptualProperty": "Receita R$"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Receita": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "vendas.crescimento__a_a_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "vendas",
+			          "ConceptualProperty": "Crescimento % a.a."
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Crescimento a.a.": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "vendas.margem_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "vendas",
+			          "ConceptualProperty": "Margem %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Margem %": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "vendas.pedidos": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "vendas",
+			          "ConceptualProperty": "Pedidos"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Pedidos": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "vendas.ticket_médio_r": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "vendas",
+			          "ConceptualProperty": "Ticket Médio R$"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Ticket Médio": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

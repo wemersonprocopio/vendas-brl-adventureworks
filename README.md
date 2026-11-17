@@ -3,7 +3,7 @@
 Análise das vendas da AdventureWorks convertidas para reais pela cotação do dia de cada pedido, do SQL Server ao Power BI, com todos os números validados contra o banco.
 
 ![Dashboard Vendas em R$](docs/dashboard.png)
-*Página "Vendas em R$" filtrada em 2013.*
+*Página "Análise" filtrada em 2013.*
 
 ## Problema
 
@@ -18,19 +18,21 @@ dados brutos → limpeza → transformação → análise → indicadores → vi
 | Etapa | O que foi feito |
 |---|---|
 | Dados brutos | `FactInternetSales`, `FactResellerSales` e a cotação diária `FactCurrencyRate` |
-| Transformação (SQL) | Views `vw_CotacaoBRL` e `vw_VendasBRL`: os dois canais numa base só, já em R$ |
-| Limpeza (Power Query) | Só anos com venda nos 12 meses; só territórios com venda |
-| Modelo (Power BI) | Fato `vw_VendasBRL` ligado a data, produto, cliente, revenda e território |
+| Transformação (SQL) | Views `view_cotacaobrl` e `view_vendasbrl`: os dois canais numa base só, já em R$, com período 2011–2013 e colunas e valores em português (país, região, continente) |
+| Limpeza (Power Query) | Só territórios com venda; a consulta `AnosAnalise` confere que cada ano tem venda nos 12 meses |
+| Modelo (Power BI) | Fato `vendas` ligado a `data`, `produtos`, `clientes`, `revendas` e `territorios` |
 | Indicadores (DAX) | 14 medidas: base, inteligência de tempo e textos/cores para formatação condicional |
-| Visualização | Página "Vendas em R$": cartões, receita × margem por mês, receita por país, tabela ano/canal e evolução da cotação |
+| Visualização | Capa + página "Análise": filtros de Ano, Canal e País; 6 cartões; receita × margem por mês; receita por país; resumo por ano e canal; evolução da cotação |
 | Validação | Cada número do dashboard conferido com uma consulta SQL independente, até o centavo |
 
 ## Decisões e regras de negócio
 
 - **Conversão pela cotação do dia do pedido.** Na `FactCurrencyRate`, `AverageRate` é quantos dólares vale 1 real; por isso `R$ = USD / AverageRate`.
-- **Recorte 2011–2013.** A base tem 2010 com poucos dias de venda e 2014 só com janeiro. A consulta `AnosAnalise` (Power Query) mantém apenas anos com venda nos 12 meses, então o recorte vem dos dados e não de uma lista fixa.
+- **Recorte 2011–2013 na própria view.** A base tem 2010 com poucos dias de venda e 2014 só com janeiro; a view filtra de 01/01/2011 a 31/12/2013 (anos civis completos).
+- **Revenda sem dezembro/2013.** A última venda da Revenda na base é de 29/11/2013. A Internet tem os 36 meses; a nota aparece no relatório.
 - **Crescimento só entre anos inteiros.** O `Crescimento % a.a.` fica em branco quando o período atual ou o do ano anterior não está completo na base (por isso 2011 aparece como "s/ comparação").
-- **Territórios sem venda saem do filtro de país** (ex.: o território "NA" da dimensão).
+- **Um ano por vez.** O filtro de Ano é de seleção única (abre em 2013), para os gráficos mensais nunca somarem anos diferentes; a tabela "Resumo por Ano e Canal" ignora esse filtro e mostra os três anos lado a lado.
+- **Tudo em português na origem.** País, região e continente chegam traduzidos da view (`CASE` no SQL).
 - **Cotação média ponderada pela receita**: `Receita R$ / Receita USD`, e não a média simples das cotações.
 
 ## Indicadores
@@ -69,20 +71,22 @@ Validação: 118.917 linhas; receita, margem, pedidos e ticket batem com o SQL n
 ## Estrutura do repositório
 
 ```
-vw_CotacaoBRL_VendasBRL.sql     views no SQL Server + consultas de exploração e conferência
-vw_VendasBRL.pbip               projeto do Power BI (abrir este arquivo)
-vw_VendasBRL.SemanticModel/     modelo em TMDL: tabelas, relacionamentos, medidas DAX, Power Query
-vw_VendasBRL.Report/            página do relatório em PBIR (JSON)
-gerar_pagina_vendas_brl.py      script que gera a página "Vendas em R$" (visuais em JSON)
+views_cotacaobrl_vendasbrl.sql                     views no SQL Server + consultas de conferência
+vendas_brl_adventureworks_2011_2013.pbip           projeto do Power BI (abrir este arquivo)
+vendas_brl_adventureworks_2011_2013.SemanticModel/ modelo em TMDL: tabelas, relacionamentos, medidas DAX, Power Query
+vendas_brl_adventureworks_2011_2013.Report/        capa e página "Análise" em PBIR (JSON)
+background.pptx                                    telas de fundo da capa e da página Análise
+gerar_pagina_vendas_brl.py                         script que gerou a primeira versão da página (histórico)
+docs/dashboard.png                                 print da página Análise
 ```
 
 ## Como reproduzir
 
 1. Restaure o banco **AdventureWorksDW2014** num SQL Server.
-2. Rode `vw_CotacaoBRL_VendasBRL.sql` para criar as views `dbo.vw_CotacaoBRL` e `dbo.vw_VendasBRL`.
-3. Abra `vw_VendasBRL.pbip` no Power BI Desktop.
+2. Rode `views_cotacaobrl_vendasbrl.sql` para criar as views `dbo.view_cotacaobrl` e `dbo.view_vendasbrl`.
+3. Abra `vendas_brl_adventureworks_2011_2013.pbip` no Power BI Desktop.
 4. As consultas apontam para o SQL Server local do autor. Troque pelo nome do seu servidor em **Transformar dados → Configurações da fonte de dados** e atualize.
 
 ## Ferramentas
 
-SQL Server (T-SQL, views) · Power BI Desktop (Power Query M, DAX, formato PBIP/TMDL/PBIR) · Python · IA (Claude) como apoio na construção e na validação
+SQL Server (T-SQL, views) · Power BI Desktop (Power Query M, DAX, formato PBIP/TMDL/PBIR) · PowerPoint (telas de fundo) · Python · IA (Claude) como apoio na construção e na validação
